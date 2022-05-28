@@ -17,7 +17,7 @@ class CustomEnv(gym.Env):
 
     def step(self, action):
         observation, reward, done = self.normal_env.step(u=action)
-        return observation, reward, done, ""
+        return observation, reward, done, {}
 
     def reset(self):
         observation = self.normal_env.reset()

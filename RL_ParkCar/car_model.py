@@ -16,7 +16,7 @@ class CarModel:
         self.obs_dim = 9
         self.act_dim = 9
         self.state_dot = np.zeros(5)
-        self.dt = .1
+        self.dt = 1
 
         self.x_lim = 21
         self.y_lim = 21
@@ -46,7 +46,7 @@ class CarModel:
             [initial_x, initial_y, initial_vely, initial_angle, initial_steering])
 
         target_y = 20.
-        target_x = 5.  # np.random.randint(1, 20)
+        target_x = 10.  # np.random.randint(1, 20)
         target_vely = 0.
         target_angle = 0.
         self.target_state = np.array(
