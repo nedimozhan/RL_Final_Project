@@ -1,8 +1,11 @@
 from custom_gym_env import CustomEnv
 import numpy as np
 import time
+from stable_baselines3.common.env_checker import check_env
 
 env = CustomEnv()
+
+check_env(env)
 
 
 s = env.reset()

@@ -37,7 +37,7 @@ class CarModel:
         self.steering_increase = 1
 
     def reset(self):
-        initial_x = 10.  # np.random.rand(1, 19)
+        initial_x = np.random.rand()*18+1
         initial_y = 0.
         initial_vely = 0.
         initial_angle = 0.
@@ -46,11 +46,16 @@ class CarModel:
             [initial_x, initial_y, initial_vely, initial_angle, initial_steering])
 
         target_y = 20.
-        target_x = 10.  # np.random.randint(1, 20)
+        target_x = np.random.randint(1, 20)
         target_vely = 0.
         target_angle = 0.
         self.target_state = np.array(
             [target_x, target_y, target_vely, target_angle])
+
+        self.reward = 0
+        self.done = False
+        self.step_count = 0
+        self.max_step = 100
 
         self.__update_obs()
         return self.observation
@@ -169,7 +174,7 @@ class CarModel:
         vel_err = abs(self.state[2]-self.target_state[2])
         angle_err = abs(self.state[3]-self.target_state[3])
         self.reward = -pose_err
-        if pose_err < 1:  # and vel_err < 1 and angle_err < 5/180:
+        if pose_err < 1 and vel_err < 1 and angle_err < 5/180:
             self.done = True
             self.reward += 1000
         elif self.step_count >= self.max_step:
