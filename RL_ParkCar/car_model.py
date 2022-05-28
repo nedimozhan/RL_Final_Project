@@ -11,11 +11,16 @@ class CarModel:
         self.obs_dim = 9
         self.act_dim = 9
         self.state_dot = np.zeros(5)
-        self.dt = .01
+        self.dt = .1
 
         self.max_vel = 5
         self.max_steering = 30/180
         self.max_angle = np.pi
+
+        self.reward = 0
+        self.done = False
+        self.step = 0
+        self.max_step = 100
 
         self.target_state = np.zeros(4)
 
@@ -23,7 +28,7 @@ class CarModel:
         self.steering_increase = 1
 
     def reset(self):
-        initial_x = np.random.rand(1, 19)
+        initial_x = 10  # np.random.rand(1, 19)
         initial_y = 0
         initial_vely = 0
         initial_angle = 0
@@ -32,7 +37,7 @@ class CarModel:
             [initial_x, initial_y, initial_vely, initial_angle, initial_steering])
 
         target_y = 20
-        target_x = np.random.randint(1, 20)
+        target_x = 10  # np.random.randint(1, 20)
         target_vely = 0
         target_angle = 0
         self.target_state = np.array(
@@ -42,11 +47,13 @@ class CarModel:
         return self.observation
 
     def step(self, u):
+        self.step += 1
         u = self.__convert_u(u=u)
         self.__update_state(u=u)
         self.__check_state_limit()
         self.__update_obs()
-        return self.observation
+        self.__check_done_reward()
+        return self.observation, self.reward, self.done
 
     def render(self):
         raise NotImplementedError
@@ -94,3 +101,17 @@ class CarModel:
             min(self.state[4], self.max_steering), -self.max_steering)
         self.state[3] = max(
             min(self.state[3], self.max_angle), -self.max_angle)
+
+    def __check_done_reward(self):
+        pose_err = np.sqrt(
+            (self.state[0]-self.target_state[0])**2+(self.state[1]-self.state[1])**2)
+        vel_err = abs(self.state[2]-self.target_state[2])
+        angle_err = abs(self.state[3]-self.target_state[3])
+        self.reward = -pose_err
+        if pose_err < 1 and vel_err < 1 and angle_err < 5/180:
+            self.done = True
+            self.reward += 1000
+        elif self.step >= self.max_step:
+            self.done = True
+        else:
+            self.done = False
