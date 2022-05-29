@@ -174,7 +174,7 @@ class CarModel:
         vel_err = abs(self.state[2]-self.target_state[2])
         angle_err = abs(self.state[3]-self.target_state[3])
         self.reward = -pose_err
-        if pose_err < 1 and vel_err < 1 and angle_err < 5/180:
+        if pose_err < 1 and vel_err < 1 and angle_err < 15/180:
             self.done = True
             self.reward += 1000
         elif self.step_count >= self.max_step:
