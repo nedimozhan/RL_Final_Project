@@ -4,7 +4,7 @@ import time
 
 
 env = CustomEnv()
-policy = DQN.load('model/yavsaknedim3')
+policy = DQN.load('model/yavsaknedim')
 
 state = env.reset()
 
